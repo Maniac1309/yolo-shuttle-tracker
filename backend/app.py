@@ -81,7 +81,7 @@ async def track(file: UploadFile = File(...)):
             save=True,
             conf=0.25,
             imgsz=320,
-            device="cpu"
+            device="cpu",
             stream = True
         )
         for r in results:
