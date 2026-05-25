@@ -5,6 +5,7 @@ from ultralytics import YOLO
 import shutil
 import os
 import glob
+import lap
 
 app = FastAPI()
 
