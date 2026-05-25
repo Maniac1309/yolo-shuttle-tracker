@@ -82,7 +82,10 @@ async def track(file: UploadFile = File(...)):
             conf=0.25,
             imgsz=320,
             device="cpu"
+            stream = True
         )
+        for r in results:
+            pass
 
         print("2. Tracking completed")
 
