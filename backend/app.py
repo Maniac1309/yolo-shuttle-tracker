@@ -64,9 +64,6 @@ async def predict(file: UploadFile = File(...)):
 
 @app.post("/track")
 async def track(file: UploadFile = File(...)):
-
-    try:
-
         # Save uploaded file
         file_path = os.path.join(UPLOAD_DIR, file.filename)
 
