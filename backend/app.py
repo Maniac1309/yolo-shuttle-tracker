@@ -66,80 +66,60 @@ async def track(file: UploadFile = File(...)):
 
     try:
 
-        print("1. Request received")
-
         # Save uploaded file
         file_path = os.path.join(UPLOAD_DIR, file.filename)
 
         with open(file_path, "wb") as buffer:
             shutil.copyfileobj(file.file, buffer)
 
-        print("2. File saved:", file_path)
+        print("1. File saved:", file_path)
 
         # Run YOLO tracking
-        model.track(
+        results = model.track(
             source=file_path,
             save=True,
-            conf=0.25
+            conf=0.25,
+            imgsz=320,
+            device="cpu"
         )
 
-        print("3. Tracking completed")
+        print("2. Tracking completed")
 
-        # Find latest tracking folder
+        # Find latest track folder
         track_dirs = glob.glob("runs/detect/track*")
 
-        print("4. Track dirs:", track_dirs)
+        print("3. Track dirs:", track_dirs)
 
         latest_dir = max(track_dirs, key=os.path.getctime)
 
-        print("5. Latest dir:", latest_dir)
+        print("4. Latest dir:", latest_dir)
 
-        # Find AVI files
-        avi_files = glob.glob(os.path.join(latest_dir, "*.avi"))
+        # Find output video
+        video_files = glob.glob(os.path.join(latest_dir, "*"))
 
-        print("6. AVI files:", avi_files)
+        print("5. Video files:", video_files)
 
-        if not avi_files:
-            return {"error": "No AVI files found"}
+        # Remove txt/log files if any
+        video_files = [
+            f for f in video_files
+            if f.endswith((".mp4", ".avi", ".mov"))
+        ]
 
-        avi_path = avi_files[0]
+        if not video_files:
+            return {"error": "No video output found"}
 
-        print("7. AVI path:", avi_path)
+        output_path = video_files[0]
 
-        # Output MP4 path
-        mp4_path = os.path.join(latest_dir, "tracked_output.mp4")
-
-        print("8. MP4 path:", mp4_path)
-
-        # Convert AVI → MP4
-        ffmpeg_command = (
-            f'ffmpeg -y -i "{avi_path}" '
-            f'-vcodec libx264 "{mp4_path}"'
-        )
-
-        print("9. Running ffmpeg")
-
-        ffmpeg_status = os.system(ffmpeg_command)
-
-        print("10. FFmpeg status:", ffmpeg_status)
-
-        # Verify MP4 exists
-        if not os.path.exists(mp4_path):
-           
-            print("11. MP4 NOT FOUND")
-
-            return {"error": "MP4 conversion failed"}
-
-        print("12. Returning MP4")
+        print("6. Output path:", output_path)
 
         return FileResponse(
-            path=mp4_path,
+            path=output_path,
             media_type="video/mp4",
-            filename="tracked_output.mp4"
+            filename="tracked_video.mp4"
         )
 
     except Exception as e:
 
-        print("ERROR:", str(e))
+        print("TRACK ERROR:", str(e))
 
         return {"error": str(e)}
