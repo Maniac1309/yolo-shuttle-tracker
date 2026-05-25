@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeroTrack // YOLO Shuttle Analytics</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <div class="glow-bg glow-1"></div>
+    <div class="glow-bg glow-2"></div>
+
+    <div class="container">
+        <header class="hero">
+            <div class="badge">AI-POWERED SPORTS ANALYTICS</div>
+            <h1>AeroTrack<span class="gradient-text">.yolo</span></h1>
+            <p>High-precision computer vision for shuttlecock detection, trajectory tracking, and performance metrics.</p>
+        </header>
+
+        <main class="dashboard-grid">
+            
+            <section class="panel upload-panel">
+                <div class="panel-header">
+                    <i data-lucide="cpu" class="icon-cyan"></i>
+                    <h2>Media Ingestion</h2>
+                </div>
+                
+                <div class="drop-zone" id="dropZone">
+                    <input type="file" id="fileInput" accept="image/*,video/*" hidden>
+                    <div class="drop-zone-content">
+                        <i data-lucide="cloud-lightning" class="upload-icon"></i>
+                        <h3>Drag & drop media here</h3>
+                        <p>Supports MP4, MOV, JPG, PNG</p>
+                        <span class="btn-secondary">Browse Files</span>
+                    </div>
+                    <div class="preview-container hidden" id="previewContainer">
+                        <img id="imagePreview" class="media-preview hidden" src="" alt="Preview">
+                        <video id="videoPreview" class="media-preview hidden" muted loop playsinline></video>
+                        <button class="remove-btn" id="removeBtn" title="Remove file">
+                            <i data-lucide="x"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="meta-box hidden" id="metaBox">
+                    <div class="meta-item">
+                        <span class="meta-label">File Name:</span>
+                        <span class="meta-value" id="metaName">-</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Type:</span>
+                        <span class="meta-value" id="metaType">-</span>
+                    </div>
+                </div>
+
+                <div class="control-actions">
+                    <button class="btn-primary disabled" id="predictBtn" disabled>
+                        <i data-lucide="image"></i>
+                        <span>Predict Image</span>
+                    </button>
+                    <button class="btn-primary disabled" id="trackBtn" disabled>
+                        <i data-lucide="activity"></i>
+                        <span>Track Video</span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="panel results-panel">
+                <div class="panel-header">
+                    <i data-lucide="terminal" class="icon-cyan"></i>
+                    <h2>Inference Output</h2>
+                    <div class="status-badge state-idle" id="statusBadge">
+                        <span class="status-dot"></span>
+                        <span id="statusText">Ready</span>
+                    </div>
+                </div>
+
+                <div class="results-viewport" id="resultsViewport">
+                    <div class="viewport-placeholder" id="viewportPlaceholder">
+                        <i data-lucide="monitor-play" class="placeholder-icon"></i>
+                        <p>Awaiting source media and model execution execution pipeline.</p>
+                    </div>
+
+                    <div class="viewport-loading hidden" id="viewportLoading">
+                        <div class="spinner-box">
+                            <div class="circle-core"></div>
+                        </div>
+                        <h3>Processing Frame Data</h3>
+                        <p>YOLO architecture resolving tensors and running tracking vectors...</p>
+                    </div>
+
+                    <img id="outputImage" class="output-media hidden" src="" alt="YOLO Detection Output">
+                    
+                    <div id="outputVideoContainer" class="video-container hidden">
+                        <video id="outputVideo" controls playsinline></video>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 AeroTrack Labs. Precision Deep Learning Infrastructure.</p>
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="script.js"></script>
+</body>
+</html>
