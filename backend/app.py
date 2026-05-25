@@ -82,48 +82,18 @@ async def track(file: UploadFile = File(...)):
             conf=0.25,
             imgsz=320,
             device="cpu",
+            vid_stride = 3,
             stream = True
         )
         for r in results:
             pass
 
-        print("2. Tracking completed")
-
-        # Find latest track folder
+# Find latest track folder
         track_dirs = glob.glob("runs/detect/track*")
-
-        print("3. Track dirs:", track_dirs)
-
         latest_dir = max(track_dirs, key=os.path.getctime)
 
-        print("4. Latest dir:", latest_dir)
-
-        # Find output video
+    # Find generated video
         video_files = glob.glob(os.path.join(latest_dir, "*"))
-
-        print("5. Video files:", video_files)
-
-        # Remove txt/log files if any
-        video_files = [
-            f for f in video_files
-            if f.endswith((".mp4", ".avi", ".mov"))
-        ]
-
-        if not video_files:
-            return {"error": "No video output found"}
-
         output_path = video_files[0]
 
-        print("6. Output path:", output_path)
-
-        return FileResponse(
-            path=output_path,
-            media_type="video/mp4",
-            filename="tracked_video.mp4"
-        )
-
-    except Exception as e:
-
-        print("TRACK ERROR:", str(e))
-
-        return {"error": str(e)}
+        return FileResponse(output_path)
