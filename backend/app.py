@@ -28,24 +28,33 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 @app.post("/predict")
 async def predict(file: UploadFile = File(...)):
 
-    # Save uploaded file
     file_path = os.path.join(UPLOAD_DIR, file.filename)
 
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
 
-    # Run YOLO inference
     results = model.predict(
         source=file_path,
         save=True,
-        conf=0.25
+        conf=0.25,
+        imgsz=320,
+        device="cpu"
     )
 
-    # Output path
+    # DEBUG
+    print("SAVE DIR:", results[0].save_dir)
+
+    # CORRECT OUTPUT PATH
     output_path = os.path.join(
-        results[0].save_dir,
-        file.filename
+        str(results[0].save_dir),
+        os.path.basename(file.filename)
     )
+
+    print("OUTPUT PATH:", output_path)
+
+    # VERIFY FILE EXISTS
+    if not os.path.exists(output_path):
+        return {"error": f"Output file not found: {output_path}"}
 
     return FileResponse(output_path)
 
